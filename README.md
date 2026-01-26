@@ -1,6 +1,6 @@
 Cosas que necesita la clase a crear para la pokedex
 
-Pokemon
+Pokemon (Nombre)
     Nombre
     Tipo
     Estadisticas
