@@ -36,3 +36,30 @@ class Pokemon:
             otro_pokemon.recibir_dano(dano)
         else:
             print(f"| ¡El ataque de {self.nombre} ha fallado!")
+            
+    def aprender_movimiento(self, lista_movimientos, nuevo_mov):
+        """Añade un movimiento o gestiona la sustitución si ya hay 4."""
+        if len(lista_movimientos) < 4:
+            lista_movimientos.append(nuevo_mov)
+            print(f"¡{self.nombre} ha aprendido {nuevo_mov.nombre}!")
+        else:
+            print(f"\n--- {self.nombre} quiere aprender {nuevo_mov.nombre} ---")
+            print("Pero ya conoce 4 movimientos. Elige uno para olvidar:")
+            
+            seleccion_realizada = False
+            while not seleccion_realizada:
+                for i, m in enumerate(lista_movimientos):
+                    print(f"{i + 1}. {m.nombre}")
+                
+                opcion = input("Elige el número del movimiento a olvidar (1-4): ")
+                
+                if opcion in ["1", "2", "3", "4"]:
+                    indice = int(opcion) - 1
+                    olvidado = lista_movimientos[indice].nombre
+                    lista_movimientos[indice] = nuevo_mov
+                    print(f"¡Puf! {self.nombre} olvidó {olvidado} y aprendió {nuevo_mov.nombre}.")
+                    seleccion_realizada = True
+                else:
+                    print("Por favor, selecciona un número válido del 1 al 4.")
+        
+        return lista_movimientos

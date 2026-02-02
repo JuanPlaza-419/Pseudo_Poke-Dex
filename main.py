@@ -1,29 +1,17 @@
 import time
 import random
-from pokemon import Pokemon
-from movimiento import Movimiento
+from datos_combate import JOSE_LUIS, PACO_PEPE, MOVS_CUNAO, MOVS_GITANO
 
-"""Definición de Movimientos (El tipo debe ser IGUAL al del Pokémon)"""
+p1 = JOSE_LUIS
+p2 = PACO_PEPE
 
-"""Movimientos para Jose Luis (Tipo: Cuñao)"""
-movs_cuñao = [
-    Movimiento("Cerveza Fria", "Cuñao", 5, 100),
-    Movimiento("Machismo", "Cuñao", 12, 80),
-    Movimiento("Ajustar Huevo Ajeno", "Cuñao", 15, 70),
-    Movimiento("Pre-Jubilacion", "Cuñao", 20, 60)
-]
-
-"""Movimientos para Paco Pepe (Tipo: Gitano)"""
-movs_gitano = [
-    Movimiento("Llamar al Primo", "Gitano", 10, 90),
-    Movimiento("Navaja Mariposa", "Gitano", 18, 75),
-    Movimiento("Grito sin Proposito", "Gitano", 8, 95),
-    Movimiento("Patada en Huevillos", "Gitano", 25, 50)
-]
-
-"""Creación de los contrincantes"""
-p1 = Pokemon("Jose Luis", "Cuñao", 20)
-p2 = Pokemon("Paco Pepe", "Gitano", 20)
+"""Asignar movimientos según velocidad (Lógica de combate igual que antes)"""
+if p1.velocidad >= p2.velocidad:
+    atacante, movs_atq = p1, MOVS_CUNAO
+    defensor, movs_def = p2, MOVS_GITANO
+else:
+    atacante, movs_atq = p2, MOVS_GITANO
+    defensor, movs_def = p1, MOVS_CUNAO
 
 print("¡COMIENZA EL COMBATE!")
 print(f"{p1.nombre} ({p1.tipo}) vs {p2.nombre} ({p2.tipo})\n")
@@ -31,11 +19,11 @@ time.sleep(1)
 
 """Determinar quién empieza por velocidad"""
 if p1.velocidad >= p2.velocidad:
-    atacante, movs_atq = p1, movs_cuñao
-    defensor, movs_def = p2, movs_gitano
+    atacante, movs_atq = p1, MOVS_CUNAO
+    defensor, movs_def = p2, MOVS_GITANO
 else:
-    atacante, movs_atq = p2, movs_gitano
-    defensor, movs_def = p1, movs_cuñao
+    atacante, movs_atq = p2, MOVS_GITANO
+    defensor, movs_def = p1, MOVS_CUNAO
 
 print(f"{atacante.nombre} ataca primero por su velocidad ({atacante.velocidad})\n")
 
