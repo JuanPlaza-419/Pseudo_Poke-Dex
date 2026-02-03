@@ -1,5 +1,13 @@
 import random
 
+"""Tabla de efectividades: [Atacante][Defensor]"""
+TABLA_TIPOS = {
+    "espadachín": {"hachero": 1.5, "lancero": 0.5, "espadachín": 1.0, "mago": 1.5},
+    "hachero":    {"lancero": 1.5, "espadachín": 0.5, "hachero": 1.0, "mago": 1.5},
+    "lancero":    {"espadachín": 1.5, "hachero": 0.5, "lancero": 1.0, "mago": 1.5},
+    "mago":       {"espadachín": 1.5, "hachero": 1.5, "lancero": 1.5, "mago": 1.0}
+}
+
 class Pokemon:
     def __init__(self, nombre, tipo, nivel):
         self.nombre = nombre
@@ -27,13 +35,26 @@ class Pokemon:
 
         print(f"\n>> {self.nombre} intenta usar {mov.nombre.upper()}...")
         
-        """Lógica de Precisión: Tirada de probabilidad entre 1 y 100"""
+        """Lógica de Precisón: Tirada de probabilidad entre 1 y 100"""
         probabilidad = random.randint(1, 100)
         
         if probabilidad <= mov.precision:
+            """Cálculo de efectividad: Consulta la tabla según los tipos de ambos combatientes"""
+            multiplicador = TABLA_TIPOS[self.tipo][otro_pokemon.tipo]
+            
             """Cálculo de daño: (Fuerza + Potencia) - Defensa del rival"""
-            dano = (self.fuerza + mov.potencia) - otro_pokemon.defensa
-            otro_pokemon.recibir_dano(dano)
+            dano_base = (self.fuerza + mov.potencia) - otro_pokemon.defensa
+            
+            """Aplicar el multiplicador de tipo al daño final (redondeado a entero)"""
+            dano_final = int(dano_base * multiplicador)
+            
+            """Mensaje de efectividad"""
+            if multiplicador > 1.0:
+                print("¡Es súper efectivo!")
+            elif multiplicador < 1.0:
+                print("No es muy efectivo...")
+                
+            otro_pokemon.recibir_dano(dano_final)
         else:
             print(f"| ¡El ataque de {self.nombre} ha fallado!")
             
