@@ -1,11 +1,12 @@
 from movimiento import Movimiento
-from pokemon import Pokemon
+from pokemon import Mago, Espadachin 
 
-"""Definición de los Combatientes Activos"""
-ALEISTER = Pokemon("Aleister Crowley", "mago", 20)
-SEIGEN = Pokemon("Toda Seigen", "espadachín", 20)
+"""Definición de los Combatientes Activos usando Herencia"""
+ALEISTER = Mago("Aleister Crowley", 20)
+SEIGEN = Espadachin("Toda Seigen", 20)
 
-"""Listas de movimientos"""
+"""Listas de movimientos exclusivos"""
+
 MOVS_ALEISTER = [
     Movimiento("Abramelin", "mago", 15, 90),
     Movimiento("Estrella de Plata", "mago", 12, 100),
@@ -20,7 +21,7 @@ MOVS_SEIGEN = [
     Movimiento("Estilo Chujo-ryu", "espadachín", 22, 60)
 ]
 
-"""Gestión de aprendizaje para nuevos movimientos"""
+"""Gestión de aprendizaje"""
 
 nuevo_mov_seigen = Movimiento("Corte de Luna", "espadachín", 25, 75)
 MOVS_SEIGEN = SEIGEN.aprender_movimiento(MOVS_SEIGEN, nuevo_mov_seigen)

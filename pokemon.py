@@ -9,10 +9,10 @@ TABLA_TIPOS = {
 }
 
 class Pokemon:
-    def __init__(self, nombre, tipo, nivel):
+    def __init__(self, nombre, nivel):
         self.nombre = nombre
-        self.tipo = tipo
         self.nivel = nivel
+        self.tipo = None 
         
         """Estadísticas aleatorias con los límites que definimos"""
         self.vida = random.randint(40, 100)
@@ -35,7 +35,7 @@ class Pokemon:
 
         print(f"\n>> {self.nombre} intenta usar {mov.nombre.upper()}...")
         
-        """Lógica de Precisón: Tirada de probabilidad entre 1 y 100"""
+        """Lógica de Precisión: Tirada de probabilidad entre 1 y 100"""
         probabilidad = random.randint(1, 100)
         
         if probabilidad <= mov.precision:
@@ -48,7 +48,6 @@ class Pokemon:
             """Aplicar el multiplicador de tipo al daño final (redondeado a entero)"""
             dano_final = int(dano_base * multiplicador)
             
-            """Mensaje de efectividad"""
             if multiplicador > 1.0:
                 print("¡Es súper efectivo!")
             elif multiplicador < 1.0:
@@ -84,3 +83,27 @@ class Pokemon:
                     print("Por favor, selecciona un número válido del 1 al 4.")
         
         return lista_movimientos
+
+"""--- CLASES ESPECIALIZADAS (Herencia) ---"""
+
+
+
+class Espadachin(Pokemon):
+    def __init__(self, nombre, nivel):
+        super().__init__(nombre, nivel)
+        self.tipo = "espadachín"
+
+class Mago(Pokemon):
+    def __init__(self, nombre, nivel):
+        super().__init__(nombre, nivel)
+        self.tipo = "mago"
+
+class Lancero(Pokemon):
+    def __init__(self, nombre, nivel):
+        super().__init__(nombre, nivel)
+        self.tipo = "lancero"
+
+class Hachero(Pokemon):
+    def __init__(self, nombre, nivel):
+        super().__init__(nombre, nivel)
+        self.tipo = "hachero"

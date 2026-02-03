@@ -5,7 +5,7 @@ from datos_combate import *
 p1 = ALEISTER
 p2 = SEIGEN
 
-"""Asignar movimientos según velocidad (Lógica de combate igual que antes)"""
+"""Asignar movimientos según velocidad"""
 if p1.velocidad >= p2.velocidad:
     atacante, movs_atq = p1, MOVS_ALEISTER
     defensor, movs_def = p2, MOVS_SEIGEN
@@ -16,14 +16,6 @@ else:
 print("¡COMIENZA EL COMBATE!")
 print(f"{p1.nombre} ({p1.tipo}) vs {p2.nombre} ({p2.tipo})\n")
 time.sleep(1)
-
-"""Determinar quién empieza por velocidad"""
-if p1.velocidad >= p2.velocidad:
-    atacante, movs_atq = p1, MOVS_ALEISTER
-    defensor, movs_def = p2, MOVS_SEIGEN
-else:
-    atacante, movs_atq = p2, MOVS_SEIGEN
-    defensor, movs_def = p1, MOVS_ALEISTER
 
 print(f"{atacante.nombre} ataca primero por su velocidad ({atacante.velocidad})\n")
 
