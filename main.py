@@ -1,21 +1,29 @@
 import time
 import random
-from datos_combate import *
+from datos_combate import ROMPE_AIRE, SOLDADO_TECNO, MOVS_AIRE, MOVS_TECNO
 
-p1 = ALEISTER
-p2 = SEIGEN
+p1 = ROMPE_AIRE
+p2 = SOLDADO_TECNO
 
-"""Asignar movimientos según velocidad"""
+"""Asignar movimientos según velocidad (Lógica de combate igual que antes)"""
 if p1.velocidad >= p2.velocidad:
-    atacante, movs_atq = p1, MOVS_ALEISTER
-    defensor, movs_def = p2, MOVS_SEIGEN
+    atacante, movs_atq = p1, MOVS_AIRE
+    defensor, movs_def = p2, MOVS_TECNO
 else:
-    atacante, movs_atq = p2, MOVS_SEIGEN
-    defensor, movs_def = p1, MOVS_ALEISTER
+    atacante, movs_atq = p2, MOVS_TECNO
+    defensor, movs_def = p1, MOVS_AIRE
 
 print("¡COMIENZA EL COMBATE!")
 print(f"{p1.nombre} ({p1.tipo}) vs {p2.nombre} ({p2.tipo})\n")
 time.sleep(1)
+
+"""Determinar quién empieza por velocidad"""
+if p1.velocidad >= p2.velocidad:
+    atacante, movs_atq = p1, MOVS_AIRE
+    defensor, movs_def = p2, MOVS_TECNO
+else:
+    atacante, movs_atq = p2, MOVS_TECNO
+    defensor, movs_def = p1, MOVS_AIRE
 
 print(f"{atacante.nombre} ataca primero por su velocidad ({atacante.velocidad})\n")
 

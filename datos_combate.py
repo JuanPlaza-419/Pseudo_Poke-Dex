@@ -1,30 +1,31 @@
 from movimiento import Movimiento
-from pokemon import Mago, Espadachin 
+from pokemon import Volador, Acero
 
 """Definición de los Combatientes Activos usando Herencia"""
-ALEISTER = Mago("Aleister Crowley", 20)
-SEIGEN = Espadachin("Toda Seigen", 20)
+ROMPE_AIRE = Volador("Rompe-Aire", 20)
+
+SOLDADO_TECNO = Acero("Soldado del Tecno", 20)
 
 """Listas de movimientos exclusivos"""
 
-MOVS_ALEISTER = [
-    Movimiento("Abramelin", "mago", 15, 90),
-    Movimiento("Estrella de Plata", "mago", 12, 100),
-    Movimiento("Telema", "mago", 20, 70),
-    Movimiento("Ritual Menor", "mago", 10, 95)
+MOVS_AIRE = [
+    Movimiento("Tornado", "volador", 15, 95),
+    Movimiento("Ala de Acero", "volador", 12, 100),
+    Movimiento("Picotazo", "volador", 10, 100),
+    Movimiento("Ataque Aéreo", "volador", 25, 60)
 ]
 
-MOVS_SEIGEN = [
-    Movimiento("Kodachi Iai", "espadachín", 15, 95),
-    Movimiento("Corte de Grulla", "espadachín", 12, 100),
-    Movimiento("Tajo Cruzado", "espadachín", 18, 80),
-    Movimiento("Estilo Chujo-ryu", "espadachín", 22, 60)
+MOVS_TECNO = [
+    Movimiento("Puño Bala", "acero", 12, 100),
+    Movimiento("Garra Metal", "acero", 18, 90),
+    Movimiento("Cuerpo Pesado", "acero", 22, 80),
+    Movimiento("Cabeza Hierro", "acero", 20, 100)
 ]
 
-"""Gestión de aprendizaje"""
+"""Gestión de aprendizaje (5º movimiento)"""
 
-nuevo_mov_seigen = Movimiento("Corte de Luna", "espadachín", 25, 75)
-MOVS_SEIGEN = SEIGEN.aprender_movimiento(MOVS_SEIGEN, nuevo_mov_seigen)
+nuevo_mov_aire = Movimiento("Vendaval", "volador", 30, 70)
+MOVS_AIRE = ROMPE_AIRE.aprender_movimiento(MOVS_AIRE, nuevo_mov_aire)
 
-nuevo_mov_aleister = Movimiento("Clave Mayor", "mago", 30, 50)
-MOVS_ALEISTER = ALEISTER.aprender_movimiento(MOVS_ALEISTER, nuevo_mov_aleister)
+nuevo_mov_tecno = Movimiento("Giga Impacto", "acero", 35, 50)
+MOVS_TECNO = SOLDADO_TECNO.aprender_movimiento(MOVS_TECNO, nuevo_mov_tecno)
