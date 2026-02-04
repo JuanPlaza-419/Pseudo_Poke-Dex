@@ -1,13 +1,11 @@
 from movimiento import Movimiento
-from pokemon import Volador, Acero
+from pokemon import *
 
-"""Definición de los Combatientes Activos usando Herencia"""
+"""Definición de los Combatientes Activos"""
 ROMPE_AIRE = Volador("Rompe-Aire", 20)
-
 SOLDADO_TECNO = Acero("Soldado del Tecno", 20)
 
-"""Listas de movimientos exclusivos"""
-
+"""Listas de movimientos iniciales"""
 MOVS_AIRE = [
     Movimiento("Tornado", "volador", 15, 95),
     Movimiento("Ala de Acero", "volador", 12, 100),
@@ -22,8 +20,7 @@ MOVS_TECNO = [
     Movimiento("Cabeza Hierro", "acero", 20, 100)
 ]
 
-"""Gestión de aprendizaje (5º movimiento)"""
-
+"""Actualización de movimientos"""
 nuevo_mov_aire = Movimiento("Vendaval", "volador", 30, 70)
 MOVS_AIRE = ROMPE_AIRE.aprender_movimiento(MOVS_AIRE, nuevo_mov_aire)
 

@@ -1,6 +1,6 @@
 import time
 import random
-from datos_combate import ROMPE_AIRE, SOLDADO_TECNO, MOVS_AIRE, MOVS_TECNO
+from datos_combate import *
 
 p1 = ROMPE_AIRE
 p2 = SOLDADO_TECNO
