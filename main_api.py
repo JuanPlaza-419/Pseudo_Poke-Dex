@@ -3,6 +3,10 @@ from datos_combate import ROMPE_AIRE, SOLDADO_TECNO, MOVS_AIRE, MOVS_TECNO
 
 app = FastAPI()
 
+@app.get("/")
+def inicio():
+    return {"mensaje": "Arena Pokémon lista. Usa /estado o /atacar"}
+
 @app.get("/estado")
 def ver_estado():
     return {
@@ -14,12 +18,20 @@ def ver_estado():
 def atacar(nombre_atacante: str, nombre_movimiento: str):
     if nombre_atacante == ROMPE_AIRE.nombre:
         atacante, defensor, movs = ROMPE_AIRE, SOLDADO_TECNO, MOVS_AIRE
-    else:
+    elif nombre_atacante == SOLDADO_TECNO.nombre:
         atacante, defensor, movs = SOLDADO_TECNO, ROMPE_AIRE, MOVS_TECNO
+    else:
+        return {"error": "El nombre del atacante no es válido"}
 
     mov = next((m for m in movs if m.nombre.lower() == nombre_movimiento.lower()), None)
     
     if mov:
         return atacante.ejecutar_movimiento(mov, defensor)
     
-    return {"error": "Movimiento no encontrado"}
+    return {"error": f"Movimiento '{nombre_movimiento}' no encontrado"}
+
+@app.get("/reset")
+def resetear():
+    ROMPE_AIRE.vida = 100
+    SOLDADO_TECNO.vida = 100
+    return {"mensaje": "Vida de ambos combatientes reseteada a 100"}
