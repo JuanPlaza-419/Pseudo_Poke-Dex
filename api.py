@@ -1,74 +1,71 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
 import json
 import os
-from fastapi import FastAPI, HTTPException
-from pokemon import Pokemon
-from movimiento import * 
+
+from pokemon import Fuego, Agua, Planta, Volador, Acero, Pokemon
+from movimiento import LANZALLAMAS, HIDROPULSO, HOJA_AFILADA, GARRA_METAL
 
 app = FastAPI()
 DB_PATH = "pokedex.json"
 
-def cargar_datos():
-    if not os.path.exists(DB_PATH):
-        return {}
-    with open(DB_PATH, "r") as f:
-        return json.load(f)
+class PokemonSchema(BaseModel):
+    id: int
+    nombre: str
+    nivel: int
+    vida: int
+    fuerza: int
+    defensa: int
+    velocidad: int
+    tipos: List[str] # Ejemplo: ["fuego", "agua"]
 
-def guardar_datos(datos):
-    with open(DB_PATH, "w") as f:
-        json.dump(datos, f, indent=4)
+class MovimientoRequest(BaseModel):
+    id_pokemon: int
+    nombre_movimiento: str
 
-MOVIMIENTOS_DISPONIBLES = {
-    "lanzallamas": LANZALLAMAS, 
+def cargar_json():
+    if not os.path.exists(DB_PATH): return {}
+    with open(DB_PATH, "r") as f: return json.load(f)
+
+def guardar_json(datos):
+    with open(DB_PATH, "w") as f: json.dump(datos, f, indent=4)
+
+MOV_DB = {
+    "lanzallamas": LANZALLAMAS,
     "hidropulso": HIDROPULSO,
-    "hoja afilada": HOJA_AFILADA, 
+    "hoja afilada": HOJA_AFILADA,
     "garra metal": GARRA_METAL
 }
 
-@app.get("/pokemon")
-def listar():
-    return cargar_datos()
-
 @app.post("/pokemon/crear")
-def crear(id: int, nombre: str, nivel: int, vida: int, fuerza: int, defensa: int, velocidad: int, tipos: str):
-    datos = cargar_datos()
-    if str(id) in datos:
-        raise HTTPException(status_code=400, detail="ID ya ocupado")
+def crear_pokemon(data: PokemonSchema):
+    pokedex = cargar_json()
+    if str(data.id) in pokedex:
+        raise HTTPException(status_code=400, detail="El ID ya existe")
     
-    nuevo_p = Pokemon(id, nombre, nivel, vida, fuerza, defensa, velocidad)
-    nuevo_p.definir_tipos(tipos.split(","))
+    pokedex[str(data.id)] = data.dict()
+    pokedex[str(data.id)]["movimientos"] = []
     
-    datos[str(id)] = nuevo_p.datos_a_JSON()
-    guardar_datos(datos)
-    return {"mensaje": "Guardado en JSON", "pokemon": nombre}
+    guardar_json(pokedex)
+    return {"mensaje": f"Pokemon {data.nombre} guardado correctamente"}
 
 @app.post("/pokemon/añadir-movimiento")
-def añadir_movimiento(id_pokemon: int, nombre_mov: str):
-    datos = cargar_datos()
-    id_str = str(id_pokemon)
+def añadir_movimiento(req: MovimientoRequest):
+    pokedex = cargar_json()
+    id_s = str(req.id_pokemon)
     
-    if id_str not in datos:
+    if id_s not in pokedex:
         raise HTTPException(status_code=404, detail="Pokemon no encontrado")
     
-    mov_key = nombre_mov.lower()
-    if mov_key not in MOVIMIENTOS_DISPONIBLES:
-        raise HTTPException(status_code=404, detail="El movimiento no existe en movimiento.py")
+    mov_nombre = req.nombre_movimiento.lower()
+    if mov_nombre not in MOV_DB:
+        raise HTTPException(status_code=404, detail="Movimiento no existe en el sistema")
     
-    mov_obj = MOVIMIENTOS_DISPONIBLES[mov_key]
-    if mov_obj.tipo not in datos[id_str]["tipos"]:
-         raise HTTPException(status_code=400, detail="Tipo de movimiento incompatible")
-
-    if len(datos[id_str]["movimientos"]) >= 4:
-        raise HTTPException(status_code=400, detail="Ya tiene 4 movimientos")
-
-    datos[id_str]["movimientos"].append(mov_obj.nombre)
-    guardar_datos(datos)
-    return {"mensaje": f"{mov_obj.nombre} aprendido por {datos[id_str]['nombre']}"}
-
-@app.delete("/pokemon/eliminar/{id}")
-def eliminar(id: int):
-    datos = cargar_datos()
-    if str(id) in datos:
-        del datos[str(id)]
-        guardar_datos(datos)
-        return {"mensaje": "Eliminado del JSON"}
-    raise HTTPException(status_code=404, detail="No existe")
+    if len(pokedex[id_s]["movimientos"]) >= 4:
+        raise HTTPException(status_code=400, detail="El Pokemon ya conoce 4 movimientos")
+    
+    pokedex[id_s]["movimientos"].append(MOV_DB[mov_nombre].nombre)
+    
+    guardar_json(pokedex)
+    return {"mensaje": f"¡{pokedex[id_s]['nombre']} aprendió {mov_nombre}!"}
