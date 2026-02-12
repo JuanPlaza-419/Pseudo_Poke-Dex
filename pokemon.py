@@ -1,65 +1,75 @@
 import random
 
 class Pokemon:
-    def __init__(self, nombre, nivel):
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        self.id_pokemon = id_pokemon
         self.nombre = nombre
         self.nivel = nivel
-        self.tipo = "Normal"
-        self.vida = random.randint(40, 100)
-        self.fuerza = random.randint(5, 15)
-        self.defensa = random.randint(5, 18)
-        self.velocidad = random.randint(1, 100)
+        self.vida_max = vida
+        self.vida = vida
+        self.fuerza = fuerza
+        self.defensa = defensa
+        self.velocidad = velocidad
+        self.tipos = []  
+        self.movimientos = []
+
+    def datos_a_JSON(self):
+        return {
+            "id": self.id_pokemon,
+            "nombre": self.nombre,
+            "nivel": self.nivel,
+            "vida": self.vida,
+            "vida_max": self.vida_max,
+            "fuerza": self.fuerza,
+            "defensa": self.defensa,
+            "velocidad": self.velocidad,
+            "tipos": self.tipos,
+            "movimientos": self.movimientos
+        }
 
     def obtener_multiplicador(self, tipo_atq):
-        return 1.0
+        mult = 1.0
+        for t in self.tipos:
+            mult *= self._tabla(t, tipo_atq)
+        return mult
+
+    def _tabla(self, mi_tipo, tipo_atq):
+        debilidades = {
+            "fuego": {"agua": 2.0, "planta": 0.5, "acero": 0.5},
+            "agua": {"planta": 2.0, "fuego": 0.5},
+            "planta": {"fuego": 2.0, "agua": 0.5, "volador": 2.0},
+            "volador": {"acero": 2.0, "planta": 0.5},
+            "acero": {"fuego": 2.0, "volador": 0.5}
+        }
+        return debilidades.get(mi_tipo, {}).get(tipo_atq, 1.0)
 
     def recibir_dano(self, dano):
-        dano_final = max(0, dano)
-        self.vida -= dano_final
-        print(f"| {self.nombre} recibe {dano_final} de daño. Vida restante: {max(0, self.vida)}")
+        self.vida -= max(0, dano)
+        return dano
 
-    def ejecutar_movimiento(self, mov, otro_pokemon):
-        if mov.tipo != self.tipo:
-            raise ValueError(f"¡ERROR! {self.nombre} no puede usar {mov.tipo}.")
-        print(f"\n>> {self.nombre} usa {mov.nombre.upper()}...")
-        if random.randint(1, 100) <= mov.precision:
-            mult = otro_pokemon.obtener_multiplicador(self.tipo)
-            dano = int(((self.fuerza + mov.potencia) - otro_pokemon.defensa) * mult)
-            if mult > 1.0: print("¡Es súper efectivo!")
-            elif mult < 1.0: print("No es muy efectivo...")
-            otro_pokemon.recibir_dano(dano)
-        else:
-            print(f"| ¡El ataque ha fallado!")
+"""--- Clases Hijas (Tipos) ---"""
 
-    def aprender_movimiento(self, lista_movimientos, nuevo_mov):
-        """Añade o sustituye un movimiento y devuelve la lista actualizada"""
-        if len(lista_movimientos) < 4:
-            lista_movimientos.append(nuevo_mov)
-        else:
-            print(f"\n--- {self.nombre} quiere aprender {nuevo_mov.nombre} ---")
-            for i, m in enumerate(lista_movimientos):
-                print(f"{i + 1}. {m.nombre}")
-            opcion = input("Elige el número del movimiento a olvidar (1-4): ")
-            indice = int(opcion) - 1
-            lista_movimientos[indice] = nuevo_mov
-        
-        return lista_movimientos
+class Fuego(Pokemon):
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        super().__init__(id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad)
+        self.tipos = ["fuego"]
 
-"""--- Clases Hijas ---"""
+class Agua(Pokemon):
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        super().__init__(id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad)
+        self.tipos = ["agua"]
+
+class Planta(Pokemon):
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        super().__init__(id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad)
+        self.tipos = ["planta"]
 
 class Volador(Pokemon):
-    def __init__(self, nombre, nivel):
-        super().__init__(nombre, nivel)
-        self.tipo = "volador"
-    def obtener_multiplicador(self, tipo_atq):
-        if tipo_atq == "acero": return 2.0
-        return 1.0
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        super().__init__(id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad)
+        self.tipos = ["volador"]
 
 class Acero(Pokemon):
-    def __init__(self, nombre, nivel):
-        super().__init__(nombre, nivel)
-        self.tipo = "acero"
-    def obtener_multiplicador(self, tipo_atq):
-        if tipo_atq == "fuego": return 2.0
-        if tipo_atq == "volador": return 0.5
-        return 1.0
+    def __init__(self, id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad):
+        super().__init__(id_pokemon, nombre, nivel, vida, fuerza, defensa, velocidad)
+        self.tipos = ["acero"]
